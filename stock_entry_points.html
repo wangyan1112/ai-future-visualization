@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优选股票加仓点位分析 | Stock Entry Points Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+        .strategy-banner {
+            background: linear-gradient(90deg, rgba(0,217,255,0.1), rgba(0,255,136,0.1));
+            border: 1px solid rgba(0,217,255,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .strategy-banner h3 { color: #00d9ff; margin-bottom: 10px; }
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .strategy-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .strategy-item .icon { font-size: 2rem; margin-bottom: 10px; }
+        .strategy-item .label { color: #888; font-size: 0.9rem; }
+        .strategy-item .value { color: #00ff88; font-size: 1.2rem; font-weight: bold; }
+        
+        .stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .stock-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .stock-name { font-size: 1.5rem; font-weight: bold; }
+        .stock-code { color: #888; font-size: 0.9rem; }
+        .priority-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .priority-1 { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+        .priority-2 { background: linear-gradient(90deg, #ffa502, #ff7f50); }
+        .priority-3 { background: linear-gradient(90deg, #2ed573, #1e90ff); }
+        .priority-4 { background: linear-gradient(90deg, #5352ed, #3742fa); }
+        .priority-5 { background: linear-gradient(90deg, #747d8c, #57606f); }
+        
+        .price-section { margin-bottom: 20px; }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+        .price-label { color: #888; }
+        .price-value { font-weight: bold; }
+        .price-current { color: #ffa502; font-size: 1.3rem; }
+        .price-entry { color: #2ed573; }
+        .price-target { color: #00d9ff; }
+        .price-stop { color: #ff6b6b; }
+        
+        .entry-zones { margin-bottom: 20px; }
+        .entry-zones h4 { color: #00d9ff; margin-bottom: 15px; }
+        .zone {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .zone-name { font-weight: bold; }
+        .zone-range { color: #00ff88; }
+        .zone-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .zone-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .zone-1 .zone-fill { width: 30%; background: linear-gradient(90deg, #2ed573, #7bed9f); }
+        .zone-2 .zone-fill { width: 60%; background: linear-gradient(90deg, #ffa502, #eccc68); }
+        .zone-3 .zone-fill { width: 90%; background: linear-gradient(90deg, #ff6b6b, #ff4757); }
+        .zone-desc { font-size: 0.85rem; color: #aaa; }
+        
+        .signals { margin-bottom: 20px; }
+        .signals h4 { color: #00d9ff; margin-bottom: 15px; }
+        .signal-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .signal {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            background: rgba(0,217,255,0.2);
+            border: 1px solid rgba(0,217,255,0.3);
+        }
+        .signal.bullish { background: rgba(46,213,115,0.2); border-color: rgba(46,213,115,0.3); }
+        .signal.bearish { background: rgba(255,107,107,0.2); border-color: rgba(255,107,107,0.3); }
+        
+        .action-plan {
+            background: linear-gradient(135deg, rgba(0,217,255,0.1), rgba(0,255,136,0.1));
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .action-plan h4 { color: #00ff88; margin-bottom: 10px; }
+        .action-steps { font-size: 0.9rem; line-height: 1.8; }
+        
+        .summary-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        .summary-section h2 {
+            color: #00d9ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .timing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .timing-card {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        .timing-icon { font-size: 3rem; margin-bottom: 15px; }
+        .timing-title { font-size: 1.2rem; margin-bottom: 10px; color: #00ff88; }
+        .timing-desc { color: #aaa; font-size: 0.9rem; line-height: 1.6; }
+        
+        .disclaimer {
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .stocks-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 优选股票加仓点位分析</h1>
+        <p class="subtitle">基于ZSadvisor投资框架 | Updated: 2024-03</p>
+        
+        <div class="strategy-banner">
+            <h3>📊 ZSadvisor 加仓策略核心原则</h3>
+            <div class="strategy-grid">
+                <div class="strategy-item">
+                    <div class="icon">📉</div>
+                    <div class="value">逢低分批</div>
+                    <div class="label">下跌10%-15%-20%分批建仓</div>
+                </div>
+                <div class="strategy-item">
+                    <div class="icon">⏰</div>
+                    <div class="value">右侧确认</div>
+                    <div class="label">等待企稳信号再加仓</div>
+                </div>
+                <div class="strategy-item">
+                    <div class="icon">📊</div>
+                    <div class="value">量价配合</div>
+                    <div class="label">缩量止跌放量突破</div>
+                </div>
+                <div class="strategy-item">
+                    <div class="icon">🎯</div>
+                    <div class="value">仓位控制</div>
+                    <div class="label">单只不超过20%</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stocks-grid">
+            <!-- 长川科技 -->
+            <div class="stock-card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">长川科技</div>
+                        <div class="stock-code">300604.SZ | 半导体测试设备</div>
+                    </div>
+                    <span class="priority-badge priority-1">🥇 优先级 #1</span>
+                </div>
+                <div class="price-section">
+                    <div class="price-row">
+                        <span class="price-label">参考现价</span>
+                        <span class="price-value price-current">¥58.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">目标价位</span>
+                        <span class="price-value price-target">¥75-85</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">止损位</span>
+                        <span class="price-value price-stop">¥45.00 (-22%)</span>
+                    </div>
+                </div>
+                <div class="entry-zones">
+                    <h4>🎯 加仓区间</h4>
+                    <div class="zone zone-1">
+                        <div class="zone-header">
+                            <span class="zone-name">🟢 首次建仓区</span>
+                            <span class="zone-range">¥52-55</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 回调至支撑位附近</div>
+                    </div>
+                    <div class="zone zone-2">
+                        <div class="zone-header">
+                            <span class="zone-name">🟡 加仓区</span>
+                            <span class="zone-range">¥48-52</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位40% | 重要支撑确认</div>
+                    </div>
+                    <div class="zone zone-3">
+                        <div class="zone-header">
+                            <span class="zone-name">🔴 重仓区</span>
+                            <span class="zone-range">¥45-48</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 极端恐慌机会</div>
+                    </div>
+                </div>
+                <div class="signals">
+                    <h4>📡 加仓信号</h4>
+                    <div class="signal-list">
+                        <span class="signal bullish">半导体周期复苏</span>
+                        <span class="signal bullish">国产替代加速</span>
+                        <span class="signal bullish">订单持续增长</span>
+                        <span class="signal">MACD金叉</span>
+                    </div>
+                </div>
+                <div class="action-plan">
+                    <h4>📋 操作计划</h4>
+                    <div class="action-steps">
+                        1️⃣ 现价观望，等待回调至¥55以下<br>
+                        2️⃣ ¥52-55区间首次建仓30%<br>
+                        3️⃣ 跌破¥50加仓至70%<br>
+                        4️⃣ ¥75以上分批止盈
+                    </div>
+                </div>
+            </div>
+
+            <!-- 精测电子 -->
+            <div class="stock-card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">精测电子</div>
+                        <div class="stock-code">300567.SZ | 半导体检测设备</div>
+                    </div>
+                    <span class="priority-badge priority-2">🥈 优先级 #2</span>
+                </div>
+                <div class="price-section">
+                    <div class="price-row">
+                        <span class="price-label">参考现价</span>
+                        <span class="price-value price-current">¥42.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">目标价位</span>
+                        <span class="price-value price-target">¥55-65</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">止损位</span>
+                        <span class="price-value price-stop">¥32.00 (-24%)</span>
+                    </div>
+                </div>
+                <div class="entry-zones">
+                    <h4>🎯 加仓区间</h4>
+                    <div class="zone zone-1">
+                        <div class="zone-header">
+                            <span class="zone-name">🟢 首次建仓区</span>
+                            <span class="zone-range">¥38-40</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 技术支撑位</div>
+                    </div>
+                    <div class="zone zone-2">
+                        <div class="zone-header">
+                            <span class="zone-name">🟡 加仓区</span>
+                            <span class="zone-range">¥35-38</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位40% | 估值底部区域</div>
+                    </div>
+                    <div class="zone zone-3">
+                        <div class="zone-header">
+                            <span class="zone-name">🔴 重仓区</span>
+                            <span class="zone-range">¥32-35</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 历史低位机会</div>
+                    </div>
+                </div>
+                <div class="signals">
+                    <h4>📡 加仓信号</h4>
+                    <div class="signal-list">
+                        <span class="signal bullish">面板检测龙头</span>
+                        <span class="signal bullish">半导体业务拓展</span>
+                        <span class="signal">业绩拐点预期</span>
+                        <span class="signal bearish">短期承压</span>
+                    </div>
+                </div>
+                <div class="action-plan">
+                    <h4>📋 操作计划</h4>
+                    <div class="action-steps">
+                        1️⃣ 等待回调至¥40以下开始关注<br>
+                        2️⃣ ¥38-40首次建仓30%<br>
+                        3️⃣ ¥35附近加仓至60%<br>
+                        4️⃣ ¥55以上逐步减仓
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中国长城 -->
+            <div class="stock-card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">中国长城</div>
+                        <div class="stock-code">000066.SZ | 信创+国防</div>
+                    </div>
+                    <span class="priority-badge priority-3">🥉 优先级 #3</span>
+                </div>
+                <div class="price-section">
+                    <div class="price-row">
+                        <span class="price-label">参考现价</span>
+                        <span class="price-value price-current">¥12.50</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">目标价位</span>
+                        <span class="price-value price-target">¥16-18</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">止损位</span>
+                        <span class="price-value price-stop">¥9.50 (-24%)</span>
+                    </div>
+                </div>
+                <div class="entry-zones">
+                    <h4>🎯 加仓区间</h4>
+                    <div class="zone zone-1">
+                        <div class="zone-header">
+                            <span class="zone-name">🟢 首次建仓区</span>
+                            <span class="zone-range">¥11.5-12.0</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 回踩支撑</div>
+                    </div>
+                    <div class="zone zone-2">
+                        <div class="zone-header">
+                            <span class="zone-name">🟡 加仓区</span>
+                            <span class="zone-range">¥10.5-11.5</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位40% | 中期支撑位</div>
+                    </div>
+                    <div class="zone zone-3">
+                        <div class="zone-header">
+                            <span class="zone-name">🔴 重仓区</span>
+                            <span class="zone-range">¥9.5-10.5</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 极限支撑</div>
+                    </div>
+                </div>
+                <div class="signals">
+                    <h4>📡 加仓信号</h4>
+                    <div class="signal-list">
+                        <span class="signal bullish">信创政策利好</span>
+                        <span class="signal bullish">国防订单稳定</span>
+                        <span class="signal">估值合理</span>
+                        <span class="signal">央企改革</span>
+                    </div>
+                </div>
+                <div class="action-plan">
+                    <h4>📋 操作计划</h4>
+                    <div class="action-steps">
+                        1️⃣ ¥12以下开始分批建仓<br>
+                        2️⃣ ¥11附近加仓至50%<br>
+                        3️⃣ 跌破¥10重仓布局<br>
+                        4️⃣ ¥16以上分批止盈
+                    </div>
+                </div>
+            </div>
+
+            <!-- 海光信息 -->
+            <div class="stock-card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">海光信息</div>
+                        <div class="stock-code">688041.SH | 国产CPU</div>
+                    </div>
+                    <span class="priority-badge priority-4">4️⃣ 优先级 #4</span>
+                </div>
+                <div class="price-section">
+                    <div class="price-row">
+                        <span class="price-label">参考现价</span>
+                        <span class="price-value price-current">¥85.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">目标价位</span>
+                        <span class="price-value price-target">¥110-130</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">止损位</span>
+                        <span class="price-value price-stop">¥65.00 (-23%)</span>
+                    </div>
+                </div>
+                <div class="entry-zones">
+                    <h4>🎯 加仓区间</h4>
+                    <div class="zone zone-1">
+                        <div class="zone-header">
+                            <span class="zone-name">🟢 首次建仓区</span>
+                            <span class="zone-range">¥78-82</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位25% | 短期支撑</div>
+                    </div>
+                    <div class="zone zone-2">
+                        <div class="zone-header">
+                            <span class="zone-name">🟡 加仓区</span>
+                            <span class="zone-range">¥70-78</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位35% | 估值回归</div>
+                    </div>
+                    <div class="zone zone-3">
+                        <div class="zone-header">
+                            <span class="zone-name">🔴 重仓区</span>
+                            <span class="zone-range">¥65-70</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位40% | 长线布局</div>
+                    </div>
+                </div>
+                <div class="signals">
+                    <h4>📡 加仓信号</h4>
+                    <div class="signal-list">
+                        <span class="signal bullish">国产CPU稀缺标的</span>
+                        <span class="signal bullish">AI服务器需求</span>
+                        <span class="signal bearish">估值偏高</span>
+                        <span class="signal">等待回调</span>
+                    </div>
+                </div>
+                <div class="action-plan">
+                    <h4>📋 操作计划</h4>
+                    <div class="action-steps">
+                        1️⃣ 现价偏高，耐心等待回调<br>
+                        2️⃣ ¥80以下开始小仓位试探<br>
+                        3️⃣ ¥70附近重点加仓<br>
+                        4️⃣ 长线持有，目标¥120+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 振华科技 -->
+            <div class="stock-card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">振华科技</div>
+                        <div class="stock-code">000733.SZ | 军工电子</div>
+                    </div>
+                    <span class="priority-badge priority-5">5️⃣ 优先级 #5</span>
+                </div>
+                <div class="price-section">
+                    <div class="price-row">
+                        <span class="price-label">参考现价</span>
+                        <span class="price-value price-current">¥48.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">目标价位</span>
+                        <span class="price-value price-target">¥60-70</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">止损位</span>
+                        <span class="price-value price-stop">¥38.00 (-21%)</span>
+                    </div>
+                </div>
+                <div class="entry-zones">
+                    <h4>🎯 加仓区间</h4>
+                    <div class="zone zone-1">
+                        <div class="zone-header">
+                            <span class="zone-name">🟢 首次建仓区</span>
+                            <span class="zone-range">¥44-46</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 技术支撑</div>
+                    </div>
+                    <div class="zone zone-2">
+                        <div class="zone-header">
+                            <span class="zone-name">🟡 加仓区</span>
+                            <span class="zone-range">¥40-44</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位40% | 估值底部</div>
+                    </div>
+                    <div class="zone zone-3">
+                        <div class="zone-header">
+                            <span class="zone-name">🔴 重仓区</span>
+                            <span class="zone-range">¥38-40</span>
+                        </div>
+                        <div class="zone-bar"><div class="zone-fill"></div></div>
+                        <div class="zone-desc">建议仓位30% | 历史低位</div>
+                    </div>
+                </div>
+                <div class="signals">
+                    <h4>📡 加仓信号</h4>
+                    <div class="signal-list">
+                        <span class="signal bullish">军工订单稳定</span>
+                        <span class="signal bullish">电子元器件龙头</span>
+                        <span class="signal">业绩确定性高</span>
+                        <span class="signal">防御属性</span>
+                    </div>
+                </div>
+                <div class="action-plan">
+                    <h4>📋 操作计划</h4>
+                    <div class="action-steps">
+                        1️⃣ ¥46以下开始关注<br>
+                        2️⃣ ¥44附近首次建仓<br>
+                        3️⃣ ¥40以下重仓布局<br>
+                        4️⃣ ¥60以上逐步止盈
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary-section">
+            <h2>⏰ 最佳加仓时机判断</h2>
+            <div class="timing-grid">
+                <div class="timing-card">
+                    <div class="timing-icon">📉</div>
+                    <div class="timing-title">技术信号</div>
+                    <div class="timing-desc">
+                        • MACD底背离<br>
+                        • RSI < 30超卖区<br>
+                        • 缩量止跌企稳<br>
+                        • 突破下降趋势线
+                    </div>
+                </div>
+                <div class="timing-card">
+                    <div class="timing-icon">📊</div>
+                    <div class="timing-title">基本面信号</div>
+                    <div class="timing-desc">
+                        • 业绩超预期<br>
+                        • 订单大幅增长<br>
+                        • 行业政策利好<br>
+                        • 机构增持
+                    </div>
+                </div>
+                <div class="timing-card">
+                    <div class="timing-icon">😱</div>
+                    <div class="timing-title">市场情绪</div>
+                    <div class="timing-desc">
+                        • 恐慌性抛售<br>
+                        • 成交量极度萎缩<br>
+                        • 负面新闻出尽<br>
+                        • 大盘系统性调整
+                    </div>
+                </div>
+                <div class="timing-card">
+                    <div class="timing-icon">🎯</div>
+                    <div class="timing-title">操作纪律</div>
+                    <div class="timing-desc">
+                        • 严格分批建仓<br>
+                        • 控制单只仓位<br>
+                        • 设置止损位<br>
+                        • 右侧确认加仓
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            ⚠️ 免责声明：以上分析仅供参考，不构成投资建议。股市有风险，投资需谨慎。<br>
+            基于ZSadvisor投资框架生成 | 数据更新: 2024-03 | 请结合实时行情判断
+        </div>
+    </div>
+</body>
+</html>
