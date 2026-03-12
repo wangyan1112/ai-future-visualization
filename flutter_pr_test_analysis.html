@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flutter PR #665 Test Coverage Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); min-height: 100vh; color: #e8e8e8; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.05); border-radius: 20px; margin-bottom: 30px; }
+        h1 { font-size: 2.5em; background: linear-gradient(90deg, #00d4ff, #7b2cbf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .section { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 30px; margin-bottom: 25px; }
+        .section h2 { color: #00d4ff; margin-bottom: 20px; font-size: 1.5em; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+        .metric-card { background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(123,44,191,0.2)); border-radius: 15px; padding: 25px; text-align: center; }
+        .metric-value { font-size: 2.5em; font-weight: 700; color: #00d4ff; }
+        .metric-label { color: #aaa; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(0,212,255,0.2); color: #00d4ff; }
+        .auto { background: #27ae60; color: #fff; padding: 5px 15px; border-radius: 15px; }
+        .manual { background: #9b59b6; color: #fff; padding: 5px 15px; border-radius: 15px; }
+        .hybrid { background: #3498db; color: #fff; padding: 5px 15px; border-radius: 15px; }
+        .high { background: #e74c3c; padding: 4px 10px; border-radius: 10px; }
+        .medium { background: #f39c12; color: #000; padding: 4px 10px; border-radius: 10px; }
+        .low { background: #95a5a6; padding: 4px 10px; border-radius: 10px; }
+        .test-case { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #7b2cbf; }
+        .test-case h4 { color: #ffd93d; margin-bottom: 10px; }
+        .test-steps li { padding: 8px 0; color: #ccc; }
+        .rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .rec-card { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 25px; }
+        .rec-card h4 { color: #fff; margin-bottom: 15px; }
+        .rec-card li { padding: 8px 0; color: #aaa; }
+        .effort-bar { height: 30px; background: rgba(255,255,255,0.1); border-radius: 15px; overflow: hidden; margin: 10px 0; }
+        .effort-fill { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: 600; }
+        footer { text-align: center; padding: 30px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 Flutter PR #665 Test Coverage Analysis</h1>
+            <p style="color: #aaa;">Comprehensive Test Strategy with Automation vs Manual Recommendations</p>
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <span style="background: rgba(0,212,255,0.2); padding: 10px 20px; border-radius: 25px; border: 1px solid #00d4ff;">📁 app-flutter-module</span>
+                <span style="background: rgba(0,212,255,0.2); padding: 10px 20px; border-radius: 25px; border: 1px solid #00d4ff;">🔀 PR #665</span>
+                <span style="background: rgba(0,212,255,0.2); padding: 10px 20px; border-radius: 25px; border: 1px solid #00d4ff;">📅 March 12, 2026</span>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>📊 Test Coverage Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card"><div class="metric-value">24</div><div class="metric-label">Total Test Cases</div></div>
+                <div class="metric-card"><div class="metric-value">15</div><div class="metric-label">Automated Tests</div></div>
+                <div class="metric-card"><div class="metric-value">6</div><div class="metric-label">Manual Tests</div></div>
+                <div class="metric-card"><div class="metric-value">3</div><div class="metric-label">Hybrid Tests</div></div>
+                <div class="metric-card"><div class="metric-value">62%</div><div class="metric-label">Automation Rate</div></div>
+                <div class="metric-card"><div class="metric-value">~4h</div><div class="metric-label">Est. Test Time</div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Test Strategy Matrix</h2>
+            <table>
+                <tr><th>Feature Area</th><th>Test Type</th><th>Approach</th><th>Priority</th><th>Effort</th></tr>
+                <tr><td>ProductVariant Model</td><td>Unit Test</td><td><span class="auto">Automated</span></td><td><span class="high">High</span></td><td>0.5h</td></tr>
+                <tr><td>Variant API Integration</td><td>Integration Test</td><td><span class="auto">Automated</span></td><td><span class="high">High</span></td><td>1h</td></tr>
+                <tr><td>Cart Service - Add Variant</td><td>Unit Test</td><td><span class="auto">Automated</span></td><td><span class="high">High</span></td><td>0.5h</td></tr>
+                <tr><td>Stock Validation Logic</td><td>Unit Test</td><td><span class="auto">Automated</span></td><td><span class="high">High</span></td><td>0.5h</td></tr>
+                <tr><td>Variant Selector UI</td><td>Widget Test</td><td><span class="auto">Automated</span></td><td><span class="medium">Medium</span></td><td>1h</td></tr>
+                <tr><td>Image Carousel Enhancement</td><td>Widget Test</td><td><span class="hybrid">Hybrid</span></td><td><span class="medium">Medium</span></td><td>1h</td></tr>
+                <tr><td>E2E: Variant Selection Flow</td><td>E2E Test</td><td><span class="auto">Automated</span></td><td><span class="high">High</span></td><td>2h</td></tr>
+                <tr><td>Cross-Device UI Validation</td><td>UI Test</td><td><span class="manual">Manual</span></td><td><span class="medium">Medium</span></td><td>1.5h</td></tr>
+                <tr><td>Accessibility Check</td><td>A11y Test</td><td><span class="manual">Manual</span></td><td><span class="medium">Medium</span></td><td>0.5h</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Key Test Cases</h2>
+            <div class="test-case">
+                <h4>TC-001: Product Variant Selection</h4>
+                <span class="auto">Automated</span> <span class="high">High Priority</span>
+                <ul class="test-steps">
+                    <li>→ Navigate to product detail page with multiple variants</li>
+                    <li>→ Verify all variant options are displayed correctly</li>
+                    <li>→ Select a different variant (color/size)</li>
+                    <li>→ Verify price updates accordingly</li>
+                    <li>→ Verify product images change to selected variant</li>
+                </ul>
+            </div>
+            <div class="test-case">
+                <h4>TC-002: Add Variant to Cart</h4>
+                <span class="auto">Automated</span> <span class="high">High Priority</span>
+                <ul class="test-steps">
+                    <li>→ Select a specific product variant</li>
+                    <li>→ Click "Add to Cart" button</li>
+                    <li>→ Verify cart updates with correct variant details</li>
+                    <li>→ Verify variant-specific price is applied</li>
+                </ul>
+            </div>
+            <div class="test-case">
+                <h4>TC-003: Out of Stock Variant Handling</h4>
+                <span class="auto">Automated</span> <span class="high">High Priority</span>
+                <ul class="test-steps">
+                    <li>→ Navigate to product with out-of-stock variants</li>
+                    <li>→ Verify out-of-stock variants are visually marked</li>
+                    <li>→ Verify "Add to Cart" is disabled for OOS variants</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⏱️ Effort Distribution</h2>
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between;"><span>Automated Testing (62%)</span><span>~9 hours</span></div>
+                <div class="effort-bar"><div class="effort-fill" style="width: 62%; background: linear-gradient(90deg, #27ae60, #2ecc71);">Unit + Integration + E2E</div></div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between;"><span>Manual Testing (25%)</span><span>~3.5 hours</span></div>
+                <div class="effort-bar"><div class="effort-fill" style="width: 25%; background: linear-gradient(90deg, #9b59b6, #8e44ad);">Visual + A11y + L10n</div></div>
+            </div>
+            <div>
+                <div style="display: flex; justify-content: space-between;"><span>Hybrid Testing (13%)</span><span>~2 hours</span></div>
+                <div class="effort-bar"><div class="effort-fill" style="width: 13%; background: linear-gradient(90deg, #3498db, #2980b9);">Visual Regression + Perf</div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 Recommendations</h2>
+            <div class="rec-grid">
+                <div class="rec-card" style="border-top: 4px solid #27ae60;">
+                    <h4>🚀 Efficiency Gains</h4>
+                    <ul><li>Use Flutter test framework for unit/widget tests</li><li>Leverage integration_test package for E2E</li><li>Run tests in parallel on CI/CD pipeline</li><li>Use golden file testing for visual regression</li></ul>
+                </div>
+                <div class="rec-card" style="border-top: 4px solid #3498db;">
+                    <h4>📊 Coverage Focus</h4>
+                    <ul><li>Prioritize happy path flows for automation</li><li>Cover all error states in integration tests</li><li>Manual testing for subjective UI quality</li></ul>
+                </div>
+                <div class="rec-card" style="border-top: 4px solid #e74c3c;">
+                    <h4>⚠️ Risk Areas</h4>
+                    <ul><li>Cart state consistency with variants</li><li>Price calculation accuracy</li><li>Stock validation race conditions</li><li>Image carousel memory management</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Generated by AI Test Analysis Engine | IKEA China Digital Hub</p>
+            <p>© 2026 - Test Coverage Analysis Report</p>
+        </footer>
+    </div>
+</body>
+</html>
