@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投资思维对比：为什么ZSadvisor赚钱而你亏钱？</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #c0392b;
+            --accent-color: #3498db;
+            --light-bg: #ecf0f1;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        
+        .comparison-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .profile-card {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            min-width: 300px;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .zsadvisor-card {
+            border-top: 5px solid var(--success-color);
+        }
+        
+        .retail-card {
+            border-top: 5px solid var(--danger-color);
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .card-header .subtitle {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-item {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .icon {
+            margin-right: 15px;
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .feature-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .feature-content p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #555;
+        }
+        
+        .zsadvisor-text { color: var(--success-color); }
+        .retail-text { color: var(--danger-color); }
+        
+        .vs-badge {
+            background: #333;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 15rem;
+            z-index: 10;
+            display: none; /* Hidden on mobile, shown via media query */
+        }
+
+        .analysis-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-top: 3rem;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .analysis-item {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .analysis-item h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .cta-box {
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 3rem;
+        }
+        
+        @media (min-width: 768px) {
+            .vs-badge { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>投资思维终极对决</h1>
+        <p>基于ZSadvisor知识库的深度剖析：为什么同一市场，命运迥异？</p>
+    </div>
+</header>
+
+<div class="container">
+    <div style="position: relative;">
+        <div class="vs-badge">VS</div>
+        <div class="comparison-section">
+            <!-- ZSadvisor Profile -->
+            <div class="profile-card zsadvisor-card">
+                <div class="card-header">
+                    <h2 class="zsadvisor-text">ZSadvisor (众森)</h2>
+                    <div class="subtitle">战略投资者 / 长期主义者 / 政策研究者</div>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="icon">🦅</div>
+                        <div class="feature-content">
+                            <h3>宏观政策导向</h3>
+                            <p>深度研读中央文件和十四五规划，站在国家战略高度选赛道（如金融科技、新能源），顺势而为。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">🧠</div>
+                        <div class="feature-content">
+                            <h3>独立反共识思维</h3>
+                            <p>当市场疯狂追捧"核心资产"时保持清醒，认为"庄股特征"明显；在市场恐慌时看到价值洼地。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">⏳</div>
+                        <div class="feature-content">
+                            <h3>极度耐心 (20个月计划)</h3>
+                            <p>制定跨越周期的持仓计划，忍受27%的回撤也不动摇，相信均值回归和基本面兑现。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">📊</div>
+                        <div class="feature-content">
+                            <h3>双30选股标准</h3>
+                            <p>严格执行纪律：业绩+30%，股价-30%，市值>130亿，且有国际大机构（瑞银、挪威央行）背书。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">🛡️</div>
+                        <div class="feature-content">
+                            <h3>流动性真相洞察</h3>
+                            <p>不被表面价格迷惑，通过换算成交量看清真正的流动性，识别伪"核心资产"的流动性陷阱。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Typical Retail Investor Profile -->
+            <div class="profile-card retail-card">
+                <div class="card-header">
+                    <h2 class="retail-text">典型的"你" (散户)</h2>
+                    <div class="subtitle">情绪交易者 / 消息追逐者 / 短线博弈者</div>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="icon">👂</div>
+                        <div class="feature-content">
+                            <h3>消息面驱动</h3>
+                            <p>依赖小道消息、大V股评或新闻头条，追逐当下的热点，缺乏对宏观大势的独立判断。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">🐑</div>
+                        <div class="feature-content">
+                            <h3>羊群效应 (FOMO)</h3>
+                            <p>看到别人赚钱就焦虑，高位接盘热门股；看到下跌就恐慌，低位割肉离场。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">⚡</div>
+                        <div class="feature-content">
+                            <h3>急功近利</h3>
+                            <p>想要"赚快钱"，拿不住股票，几天不涨就想换股，频繁操作导致成本不断抬高。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">🎲</div>
+                        <div class="feature-content">
+                            <h3>凭感觉博弈</h3>
+                            <p>没有明确的选股标准，看K线图炒股，忽视企业基本面和估值安全边际。</p>
+                        </div>
+                    </li>
+                    <li class="feature-item">
+                        <div class="icon">🙈</div>
+                        <div class="feature-content">
+                            <h3>认知偏差</h3>
+                            <p>把股价上涨当成能力，把股价下跌归咎于运气或主力打压，缺乏复盘和自我进化。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="analysis-section">
+        <h2 style="text-align: center; margin-bottom: 2rem;">💡 核心差距深度解析</h2>
+        <div class="analysis-grid">
+            <div class="analysis-item">
+                <h3>1. 信息处理维度的降维打击</h3>
+                <p><strong>ZSadvisor</strong> 关注的是"新闻联播"、"五年规划"、"央行货币政策"等顶层设计，这是市场的<strong>元逻辑</strong>。</p>
+                <p><strong>你</strong> 关注的是"某球大V言论"、"龙虎榜数据"、"分时图波动"，这些大多是<strong>噪音</strong>。</p>
+            </div>
+            <div class="analysis-item">
+                <h3>2. 时间颗粒度的巨大差异</h3>
+                <p><strong>ZSadvisor</strong> 的时间单位是<strong>"月"甚至"年"</strong>，愿意用20个月等待一个逻辑闭环。</p>
+                <p><strong>你</strong> 的时间单位是<strong>"天"甚至"分钟"</strong>，忍受不了哪怕一周的横盘震荡。</p>
+            </div>
+            <div class="analysis-item">
+                <h3>3. 对"风险"定义的本质不同</h3>
+                <p><strong>ZSadvisor</strong> 认为<strong>"高估值"是最大风险</strong>，所以他在白酒抱团最紧时撤退，寻找低估的科技/制造。</p>
+                <p><strong>你</strong> 认为<strong>"不涨"是最大风险</strong>，所以你不敢买低位的价值股，只敢追高位的热门股。</p>
+            </div>
+            <div class="analysis-item">
+                <h3>4. 情绪管理的这种能力</h3>
+                <p><strong>ZSadvisor</strong> 将逆境视为修行的机会，认为"在逆境中坚守初心...认知会有新的提升"。</p>
+                <p><strong>你</strong> 将逆境视为灾难，情绪崩溃，甚至在黎明前倒在这一刻。</p>
+            </div>
+        </div>
+
+        <div class="cta-box">
+            <h3>🚀 如何改变？</h3>
+            <p>不要试图模仿他的持仓代码，而要模仿他的<strong>思维框架</strong>。</p>
+            <p style="font-size: 1.2rem; font-weight: bold; margin-top: 1rem;">"从来没有马云的时代，只有时代中的马云。"</p>
+            <p>去读政策，去学行业，去忍受孤独，去坚持价值。</p>
+        </div>
+    </div>
+</div>
+
+<footer style="text-align: center; padding: 2rem; color: #7f8c8d; font-size: 0.9rem;">
+    <p>Generated by AI Advisor Analysis Agent | Based on ZSadvisor Investment Philosophy</p>
+    <p>&copy; 2026 Future Finance Visualization</p>
+</footer>
+
+</body>
+</html>
