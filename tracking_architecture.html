@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Tracking Architecture Map</title>
+    <!-- Mermaid JS for Diagrams -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .diagram-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        .table-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #0058a3;
+            color: white;
+        }
+        tr:hover { background-color: #f1f1f1; }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+            color: #d63384;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Data Tracking Automation Architecture</h1>
+        <p>From Airtable Requirements to Validation Execution</p>
+    </header>
+
+    <div class="container">
+        <!-- Architecture Diagram -->
+        <div class="diagram-box">
+            <h2>System Architecture</h2>
+            <div class="mermaid">
+                graph TD
+                    subgraph Requirements Layer
+                        A[Airtable / Schema Source] -->|Export JSON| B(Schema Definition)
+                    end
+
+                    subgraph Execution Layer
+                        C[Test Runner Playwright/Python] -->|Triggers| D{User Actions}
+                        D -->|Navigation/Click| E[Application Web/App]
+                    end
+
+                    subgraph Interception Layer
+                        E -->|Generates Events| F[Network Traffic]
+                        F -->|Intercepts| G[Proxy / CDP Interceptor]
+                        G -->|Captures| H(Raw Data Events)
+                    end
+
+                    subgraph Validation Layer
+                        B -->|Expected Schema| I[Schema Validator]
+                        H -->|Actual Data| J[Data Processor]
+                        J -->|Decompress/Parse| K[Clean Event Data]
+                        K -->|Input| I
+                        I -->|Validate| L{Validation Result}
+                    end
+
+                    subgraph Reporting Layer
+                        L -->|Pass/Fail| M[HTML Report]
+                        L -->|Logs| N[Console/File Logs]
+                    end
+
+                    %% Styling
+                    style A fill:#f9d5e5,stroke:#333,stroke-width:2px
+                    style B fill:#f9d5e5,stroke:#333,stroke-width:2px
+                    style C fill:#eeeeee,stroke:#333,stroke-width:2px
+                    style G fill:#d0e1f9,stroke:#333,stroke-width:2px
+                    style I fill:#d0e1f9,stroke:#333,stroke-width:2px
+                    style M fill:#e6fffa,stroke:#333,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- Code Mapping Table -->
+        <div class="table-box">
+            <h2>Code & Component Mapping</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Architecture Layer</th>
+                        <th>Component Role</th>
+                        <th>Mapped File(s) in Repository</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Requirements</strong></td>
+                        <td>Schema Definitions</td>
+                        <td>
+                            <code>schemas/updated_tracking_schema.json</code><br>
+                            <code>schemas/ikea_actual_schema.json</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Execution</strong></td>
+                        <td>Test Runners & Logic</td>
+                        <td>
+                            <code>tests/ikea-cn-tracking-cdp.spec.js</code> (Playwright)<br>
+                            <code>tests/test_native_app_tracking.py</code> (Python/Appium)<br>
+                            <code>tests/ikea_web_test.py</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interception</strong></td>
+                        <td>Traffic Capture</td>
+                        <td>
+                            <code>src/interceptors/network_interceptor.py</code> (CDP Logic)<br>
+                            <code>proxy/proxy_server.py</code> (Proxy Server)<br>
+                            <code>proxy/mitm_interceptor.py</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Validation</strong></td>
+                        <td>Logic & Processing</td>
+                        <td>
+                            <code>src/validators/schema_validator.py</code> (Core Logic)<br>
+                            <code>src/TrackingValidator.js</code> (JS Implementation)<br>
+                            <code>src/validators/gzip_data_handler.py</code> (Decompression)<br>
+                            <code>src/validators/expectation_manager.py</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reporting</strong></td>
+                        <td>Output</td>
+                        <td>
+                            <code>playwright-report/index.html</code><br>
+                            <code>reports/ikea-cn-cdp-*.json</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

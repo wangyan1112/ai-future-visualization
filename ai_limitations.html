@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Limitations in QA Engineering</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #0058a3; /* IKEA Blue-ish */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        h1 { margin: 0; }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .section:last-child { border-bottom: none; }
+        h2 { color: #0058a3; }
+        .highlight {
+            background-color: #e8f4fd;
+            border-left: 4px solid #0058a3;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Core QA Domains Irreplaceable by AI</h1>
+        <p>Why Human Engineers Remain Critical in the Loop</p>
+    </header>
+    <div class="container">
+        <div class="section">
+            <h2>1. Contextual Understanding & Historical Knowledge</h2>
+            <p>AI models lack the deep, nuanced understanding of a project's history and "tribal knowledge."</p>
+            <div class="highlight">
+                <strong>Why AI Struggles:</strong> It sees code as text, not as a history of decisions. It doesn't know <em>why</em> a specific workaround was implemented 3 years ago to satisfy a specific stakeholder who has since left.
+            </div>
+            <ul>
+                <li>Interpreting "unwritten rules" of business logic.</li>
+                <li>Understanding the impact of legacy system constraints on new features.</li>
+                <li>Navigating organizational politics and team dynamics.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2. Complex Stakeholder Management & Negotiation</h2>
+            <p>QA is not just about finding bugs; it's about risk assessment and negotiation.</p>
+            <div class="highlight">
+                <strong>Why AI Struggles:</strong> It cannot sit in a meeting with a Product Manager and a Developer to negotiate which bugs are "release blockers" and which are "acceptable risks" based on current business pressure.
+            </div>
+            <ul>
+                <li>Aligning testing scope with shifting business priorities.</li>
+                <li>Communicating technical risks to non-technical stakeholders effectively.</li>
+                <li>Building trust and rapport with development teams.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. User Empathy & Subjective Quality</h2>
+            <p>Functional correctness does not equal a good user experience.</p>
+            <div class="highlight">
+                <strong>Why AI Struggles:</strong> AI can verify if a button clicks, but it struggles to judge if the UI feels "cluttered," "frustrating," or "delightful." It lacks the human emotional response.
+            </div>
+            <ul>
+                <li>Assessing "Look and Feel" beyond pixel-perfect matching.</li>
+                <li>Evaluating usability flows for intuitiveness.</li>
+                <li>Detecting content that might be culturally insensitive or tone-deaf.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4. Physical World Integration (IoT/Phygital)</h2>
+            <p>Software often interacts with the physical world (e.g., in-store kiosks, smart home devices).</p>
+            <div class="highlight">
+                <strong>Why AI Struggles:</strong> Pure software agents cannot physically interact with hardware in a real-world environment (e.g., unplugging a device to test power loss recovery, scanning a physical QR code under poor lighting).
+            </div>
+            <ul>
+                <li>Testing hardware-software integration in varied physical conditions.</li>
+                <li>Validating "Phygital" (Physical + Digital) customer journeys (e.g., "Scan & Go" in-store).</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5. High-Level Strategy & Architecture</h2>
+            <p>Designing the testing framework itself requires architectural vision.</p>
+            <div class="highlight">
+                <strong>Why AI Struggles:</strong> While AI can write test scripts, it struggles to design the overarching test strategy: "Should we build a custom framework or buy a tool? How do we structure our CI/CD pipeline for the next 5 years?"
+            </div>
+            <ul>
+                <li>Selecting the right tools and technologies for long-term maintainability.</li>
+                <li>Designing scalable test data management strategies.</li>
+                <li>Mentoring junior engineers and defining QA culture.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer">
+        Generated by AI Assistant | <script>document.write(new Date().getFullYear())</script>
+    </div>
+</body>
+</html>
